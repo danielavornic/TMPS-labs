@@ -9,3 +9,4 @@ Laboratory Works on Software Design Techniques and Mechanisms at TUM.
 ## Table of Contents
 
 - [Laboratory 0](lab_0/README.md)
+- [Laboratory 1](lab_1/README.md)
