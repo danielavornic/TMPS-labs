@@ -12,13 +12,13 @@
 
 ## Theory
 
-Creational Design Patterns are advanced object creation mechanisms that increase flexibility and reuse of existing code. They provide solutions to instantiate objects in the most suitable way for specific situations. The main creational patterns include:
+The goal of creational DPs is to provide advanced mechanisms to control object creation. These include mechanisms for instantiation, customization of the properties and components of structure as well as reuse of existing code. Some of the major techniques used in this domain include:
 
 - **Singleton Pattern**: Ensures a class has only one instance and provides a global point of access to it.
-- **Factory Method Pattern**: Defines an interface for creating objects but lets subclasses decide which class to instantiate.
+- **Factory Method Pattern**: Defines an interface for creating objects, but lets subclasses decide which class to instantiate.
 - **Abstract Factory Pattern**: Provides an interface for creating families of related objects without specifying their concrete classes.
 - **Builder Pattern**: Separates the construction of a complex object from its representation.
-- **Prototype Pattern**: Creates new objects by cloning an existing object, known as the prototype.
+- **Prototype Pattern**: Creates new objects by cloning an existing object.
 
 ## Domain of the application
 
@@ -31,7 +31,7 @@ The application is a Library Management System that allows librarians to:
 - Create copies of existing books
 - Search for books
 
-The system operates through a console interface and implements proper validation and error handling.
+The system runs on a console interface and implements proper validation and error handling.
 
 ## Used Design Patterns
 
@@ -39,7 +39,7 @@ The system operates through a console interface and implements proper validation
 
 **Purpose**: Ensure a single instance of the library database throughout the application.
 
-**Implementation**: The `LibraryDatabase` class implements the Singleton pattern to maintain a centralized data store for books and borrowers. The class has a private constructor and a static method `getInstance()` that returns the single instance of the class. The instance is created lazily and is thread-safe, along with the data structures used to store books and borrowers.
+**Implementation**: The `LibraryDatabase` class implements the Singleton pattern, since it is a centralized data store for books and borrowers. The class has a private constructor and a static method `getInstance()` that returns the single instance of the class. The instance is created lazily and is thread-safe, along with the data structures used to store books and borrowers.
 
 ```java
 public class LibraryDatabase implements ILibraryDatabase {
@@ -112,9 +112,9 @@ public class BookService {
 
 ### Prototype Pattern
 
-**Purpose**: Create copies of existing books while maintaining their type and basic properties.
+**Purpose**: Create copies of existing books (useful when adding new editions) while maintaining their type and properties.
 
-**Implementation**: Implemented through the `clone()` method in the `Book` hierarchy, allowing creation of book copies without knowing their specific types.
+**Implementation**: Implemented through the `clone()` method in the `Book` hierarchy, allowing creation of book copies.
 
 ```java
 public abstract class Book implements Cloneable {
@@ -149,47 +149,15 @@ public Book createBookCopy(String existingIsbn, String newIsbn, int year) {
 
 ## Implementation
 
-The project structure is organized into several packages:
-
-```
-project/
-├── client/
-│   ├── LibraryInitializer.java
-│   └── LibraryManagementSystem.java
-├── domain/
-│   ├── database/
-│   │   ├── ILibraryDatabase.java
-│   │   └── LibraryDatabase.java
-│   ├── factory/
-│   │   ├── BookCreator.java
-│   │   ├── BookType.java
-│   │   ├── FictionSection.java
-│   │   └── NonFictionSection.java
-│   └── models/
-│       ├── Book.java
-│       ├── FictionBook.java
-│       ├── NonFictionBook.java
-│       └── Borrower.java
-├── service/
-│   ├── BookService.java
-│   └── BorrowerService.java
-│   └── IBookService.java
-│   └── IBorrowerService.java
-├── ui/
-│   ├── ConsoleUI.java
-│   └── InputHandler.java
-└── util/
-    ├── LibraryException.java
-    └── ValidationUtils.java
-```
+The Library Management System is implemented in Java using the creational design patterns discussed above. The system consists of several key components, including the book hierarchy, service layer, user interface, and database layer.
 
 ### Key Components:
 
 1. **Book Hierarchy**
-   The abstract `Book` class serves as the base for all book types, such that `FictionBook` and `NonFictionBook` extend it with specific behaviors. It successfully implements the Prototype pattern by overriding the `clone()` method to create copies of existing books.
+   The abstract `Book` class serves as the base for all book types, such that `FictionBook` and `NonFictionBook` extend it with specific behaviors, mostly related to processing borrowing fees. It implements the Prototype pattern by overriding the `clone()` method.
 
 2. **Service Layer**
-   `BookService` handles book-related operations while `BorrowerService` manages borrower operations. Services use dependency injection for better flexibility.
+   `BookService` handles book-related operations, while `BorrowerService` manages borrower operations. Services use dependency injection.
 
 ```java
 public class BookService implements IBookService {
@@ -220,7 +188,7 @@ public interface IBookService {
 
 3. **User Interface**
 
-It is a console-based UI with clear menu options. The inputs are validated and the errors are handled gracefully.
+It is a console-based UI with clear menu options. The inputs are validated and the errors are handled properly.
 
 ```java
 public class ConsoleUI {
@@ -264,7 +232,7 @@ public class LibraryException extends RuntimeException {
 
 4. **Database Layer**
 
-The `LibraryDatabase` class implements the Singleton pattern to ensure a single instance of the database throughout the application. It uses synchronized collections to store books and borrowers, as shown in the snippet from the Singleton Pattern section.
+As mentioned before, the `LibraryDatabase` class implements the Singleton pattern. It uses synchronized collections to store books and borrowers, as shown in the snippet from the Singleton Pattern section.
 
 ## Screenshots / Results
 
@@ -286,12 +254,12 @@ Using the Factory Method pattern, the system can create different types of books
 ![Add Book](screenshots/add_book.png)
 _Figure 4: Adding a new book to the library_
 
-Using the Prototype pattern, the system can create copies of existing books while maintaining their type and basic properties. Figure 5 shows the process of creating a copy of an existing book by providing a new ISBN and publication year.
+Using the Prototype pattern, the system can create copies of existing books while maintaining their type and basic properties. Figure 5 shows the process of creating a copy of an existing book by entering a new ISBN and publication year.
 
 ![Create Book Copy](screenshots/create_copy.png)
 _Figure 5: Creating a copy of an existing book_
 
-The system also allows librarians to register new borrowers and handle book checkouts and returns. Figure 6 shows the process of adding a new borrower to the system, while Figure 7 and Figure 8 demonstrate checking out and returning a book to the library, respectively.
+The system also allows librarians to register new borrowers and handle book checkouts and returns. Figure 6 shows the process of adding a new borrower to the system, while Figure 7 and Figure 8 demonstrate checking out and returning a book to the library.
 
 ![Add borrower](screenshots/add_borrower.png)
 _Figure 6: Registering a new borrower_
@@ -302,11 +270,11 @@ _Figure 7: Checking out a book to a borrower_
 ![Return Book](screenshots/return_book.png)
 _Figure 8: Returning a book to the library_
 
-Last but not least, the system provides proper validation and error handling for user inputs. Figure 9 shows an example of handling a validation error when the user enters an invalid number for the ISBN of a book.
+Last but not least, the system provides validation and error handling for user inputs. Figure 9 shows an example of handling a validation error when the user enters an invalid number for the ISBN of a book.
 
 ![Validation Error](screenshots/validation.png)
 _Figure 9: Handling validation errors in the UI_
 
 ## Conclusions
 
-This laboratory work demonstrated the practical application of creational design patterns in a real-world scenario. The combination of these patterns not only improved code organization but also enhanced maintainability. By properly separating concerns and following SOLID principles, the codebase remained clean and accessible, making it easier to implement new features or modify existing ones.
+This laboratory work focused on implementing Creational Design Patterns in a Library Management System. The system uses Singleton, Factory Method, and Prototype patterns to manage the creation of books, borrowers, and book copies. It demonstrates how these patterns can be applied to create flexible and reusable object creation mechanisms in a real-world application, and how they can help improve the maintainability of the codebase.
