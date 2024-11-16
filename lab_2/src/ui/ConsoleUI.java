@@ -27,19 +27,19 @@ public class ConsoleUI {
     while (true) {
       try {
         displayMenu();
-        int choice = InputHandler.readInt("Enter your choice: ", 1, 11); // Updated max choice
+        int choice = InputHandler.readInt("Enter your choice: ", 1, 11);
 
         switch (choice) {
-          case 1 -> handleAddBook();
-          case 2 -> handleSearchBook();
-          case 3 -> handleCheckoutItem();
-          case 4 -> handleReturnItem();
-          case 5 -> handleAddBorrower();
-          case 6 -> handleViewAllBooks();
-          case 7 -> handleCreateBookCopy();
-          case 8 -> handleCreateSeries();
-          case 9 -> handleViewAllSeries();
-          case 10 -> handleAddToExistingSeries();
+          case 1 -> handleViewAllBooks();
+          case 2 -> handleViewAllSeries();
+          case 3 -> handleSearchBook();
+          case 4 -> handleAddBook();
+          case 5 -> handleCreateBookCopy();
+          case 6 -> handleCreateSeries();
+          case 7 -> handleAddToExistingSeries();
+          case 8 -> handleAddBorrower();
+          case 9 -> handleCheckoutItem();
+          case 10 -> handleReturnItem();
           case 11 -> exit();
         }
       } catch (LibraryException e) {
@@ -55,21 +55,22 @@ public class ConsoleUI {
 
   private void displayMenu() {
     System.out.println("\n=== Library Management System ===");
-    System.out.println("1. Add Book");
-    System.out.println("2. Search Book");
-    System.out.println("3. Checkout Item");
-    System.out.println("4. Return Item");
-    System.out.println("5. Add Borrower");
-    System.out.println("6. View All Books");
-    System.out.println("7. Create Book Copy");
-    System.out.println("8. Create Book Series");
-    System.out.println("9. View All Series");
-    System.out.println("10. Add Book to Series"); // New option
+    System.out.println("1. View All Books");
+    System.out.println("2. View All Series");
+    System.out.println("3. Search Items");
+    System.out.println("4. Add Book");
+    System.out.println("5. Create Book Copy");
+    System.out.println("6. Create Book Series");
+    System.out.println("7. Add Book to Series");
+    System.out.println("8. Add Borrower");
+    System.out.println("9. Checkout Item");
+    System.out.println("10. Return Item");
     System.out.println("11. Exit");
   }
 
   private void exit() {
     System.out.println("\nExiting Library Management System. Goodbye!");
+    System.exit(0);
     return;
   }
 
