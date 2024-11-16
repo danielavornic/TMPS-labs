@@ -26,9 +26,11 @@ public class ConsoleUI {
     System.out.println("Welcome to Library Management System!");
 
     while (true) {
+      libraryFacade.checkAllDueDates();
+
       try {
         displayMenu();
-        int choice = InputHandler.readInt("Enter your choice: ", 1, 11);
+        int choice = InputHandler.readInt("Enter your choice: ", 1, 13);
 
         switch (choice) {
           case 1 -> handleViewAllBooks();
@@ -41,7 +43,9 @@ public class ConsoleUI {
           case 8 -> handleAddBorrower();
           case 9 -> handleCheckoutItem();
           case 10 -> handleReturnItem();
-          case 11 -> exit();
+          case 11 -> handleViewNotifications();
+          case 12 -> handleClearNotifications();
+          case 13 -> exit();
         }
       } catch (LibraryException e) {
         System.out.println("\nError: " + e.getMessage());
@@ -66,7 +70,9 @@ public class ConsoleUI {
     System.out.println("8. Add Borrower");
     System.out.println("9. Checkout Item");
     System.out.println("10. Return Item");
-    System.out.println("11. Exit");
+    System.out.println("11. View Notifications");
+    System.out.println("12. Clear Notifications");
+    System.out.println("13. Exit");
   }
 
   private void exit() {
@@ -163,7 +169,9 @@ public class ConsoleUI {
     }
 
     String borrowerId = InputHandler.readBorrowerId("Enter borrower ID (e.g., B001): ");
-    int days = InputHandler.readInt("Enter loan period in days: ", 1, 30);
+    // Just for testing we can set the loan period to 0.0001 days to test the due
+    // date calculation
+    double days = InputHandler.readDouble("Enter loan period in days: ", 0.000001, 30);
 
     ILibraryItem item = libraryFacade.checkoutItem(itemId, borrowerId, days);
     System.out.println("\nItem checked out successfully:");
@@ -334,5 +342,26 @@ public class ConsoleUI {
     if (book instanceof DigitalBook)
       return "Digital";
     return "Unknown";
+  }
+
+  private void handleViewNotifications() {
+    System.out.println("\n=== View Notifications ===");
+    String borrowerId = InputHandler.readBorrowerId("Enter borrower ID: ");
+
+    List<String> notifications = libraryFacade.getBorrowerNotifications(borrowerId);
+    if (notifications.isEmpty()) {
+      System.out.println("No notifications.");
+    } else {
+      System.out.println("\nNotifications:");
+      notifications.forEach(System.out::println);
+    }
+  }
+
+  private void handleClearNotifications() {
+    System.out.println("\n=== Clear Notifications ===");
+    String borrowerId = InputHandler.readBorrowerId("Enter borrower ID: ");
+
+    libraryFacade.clearBorrowerNotifications(borrowerId);
+    System.out.println("Notifications cleared successfully.");
   }
 }

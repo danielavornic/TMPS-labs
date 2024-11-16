@@ -41,4 +41,20 @@ public class BorrowerService implements IBorrowerService {
     }
     return borrower.getBorrowedBooks();
   }
+
+  public List<String> getBorrowerNotifications(String borrowerId) {
+    Borrower borrower = findBorrowerById(borrowerId);
+    if (borrower == null) {
+      throw new LibraryException("Borrower not found");
+    }
+    return borrower.getNotifications();
+  }
+
+  public void clearBorrowerNotifications(String borrowerId) {
+    Borrower borrower = findBorrowerById(borrowerId);
+    if (borrower == null) {
+      throw new LibraryException("Borrower not found");
+    }
+    borrower.clearNotifications();
+  }
 }

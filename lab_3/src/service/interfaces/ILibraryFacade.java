@@ -28,7 +28,13 @@ public interface ILibraryFacade {
 
   Borrower addBorrower(String id, String name);
 
-  ILibraryItem checkoutItem(String itemId, String borrowerId, int days);
+  ILibraryItem checkoutItem(String itemId, String borrowerId, double days);
 
   ILibraryItem returnItem(String itemId);
+
+  List<String> getBorrowerNotifications(String borrowerId);
+
+  void clearBorrowerNotifications(String borrowerId);
+
+  void checkAllDueDates();
 }

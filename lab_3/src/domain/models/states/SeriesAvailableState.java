@@ -4,6 +4,8 @@ import domain.models.BookSeries;
 import domain.models.Borrower;
 import domain.models.ILibraryItem;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 import util.LibraryException;
 
 public class SeriesAvailableState implements ILibraryItemState {
@@ -18,7 +20,7 @@ public class SeriesAvailableState implements ILibraryItemState {
   }
 
   @Override
-  public void checkOut(Borrower borrower, int loanPeriodDays) {
+  public void checkOut(Borrower borrower, double loanPeriodDays) {
     if (!series.areAllItemsAvailable()) {
       throw new LibraryException("Not all items in series are available");
     }
@@ -28,8 +30,13 @@ public class SeriesAvailableState implements ILibraryItemState {
     SeriesCheckedOutState newState = new SeriesCheckedOutState();
     newState.setContext(series);
     newState.setBorrower(borrower);
-    newState.setDueDate(LocalDate.now().plusDays(loanPeriodDays));
+    newState.setDueDate(LocalDate.now().plusDays((long) loanPeriodDays));
     series.setState(newState);
+
+    borrower.update(String.format(
+        "You have borrowed '%s'. Due date: %s",
+        series.getTitle(),
+        series.getState().getDueDate().format(DateTimeFormatter.ISO_LOCAL_DATE)));
   }
 
   @Override
@@ -55,5 +62,10 @@ public class SeriesAvailableState implements ILibraryItemState {
   @Override
   public LocalDate getDueDate() {
     return null;
+  }
+
+  @Override
+  public void checkDueDate() {
+
   }
 }

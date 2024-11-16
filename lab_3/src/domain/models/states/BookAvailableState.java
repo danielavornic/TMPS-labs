@@ -4,6 +4,8 @@ import domain.models.Book;
 import domain.models.Borrower;
 import domain.models.ILibraryItem;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 import util.LibraryException;
 
 public class BookAvailableState implements ILibraryItemState {
@@ -18,7 +20,7 @@ public class BookAvailableState implements ILibraryItemState {
   }
 
   @Override
-  public void checkOut(Borrower borrower, int loanPeriodDays) {
+  public void checkOut(Borrower borrower, double loanPeriodDays) {
     if (loanPeriodDays > book.getMaxLoanDays()) {
       throw new LibraryException("Maximum loan period exceeded for this book type");
     }
@@ -26,8 +28,14 @@ public class BookAvailableState implements ILibraryItemState {
     BookCheckedOutState newState = new BookCheckedOutState();
     newState.setContext(book);
     newState.setBorrower(borrower);
-    newState.setDueDate(LocalDate.now().plusDays(loanPeriodDays));
+    newState.setDueDate(LocalDate.now().plusDays((long) loanPeriodDays));
     book.setState(newState);
+
+    borrower.update(String.format(
+        "You have borrowed '%s'. Due date: %s",
+        book.getTitle(),
+        book.getState().getDueDate().format(DateTimeFormatter.ISO_LOCAL_DATE)));
+
   }
 
   @Override
@@ -53,5 +61,9 @@ public class BookAvailableState implements ILibraryItemState {
   @Override
   public LocalDate getDueDate() {
     return null;
+  }
+
+  @Override
+  public void checkDueDate() {
   }
 }

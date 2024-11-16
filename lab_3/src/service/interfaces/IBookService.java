@@ -8,7 +8,7 @@ import java.util.List;
 public interface IBookService {
   Book addBook(String title, String author, String isbn, int year, BookType type);
 
-  Book checkoutBook(String isbn, String borrowerId, int loanPeriodDays);
+  Book checkoutBook(String isbn, String borrowerId, double loanPeriodDays);
 
   Book returnBook(String isbn);
 
@@ -19,4 +19,6 @@ public interface IBookService {
   List<Book> getAllBooks();
 
   Book createBookCopy(String existingIsbn, String newIsbn, int year);
+
+  void checkAllDueDates();
 }

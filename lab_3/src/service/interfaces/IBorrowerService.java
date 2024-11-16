@@ -10,4 +10,8 @@ public interface IBorrowerService {
   Borrower findBorrowerById(String id);
 
   List<Book> getBorrowedBooks(String borrowerId);
+
+  List<String> getBorrowerNotifications(String borrowerId);
+
+  void clearBorrowerNotifications(String borrowerId);
 }

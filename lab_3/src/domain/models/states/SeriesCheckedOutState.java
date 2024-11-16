@@ -5,6 +5,8 @@ import domain.models.Borrower;
 import domain.models.ILibraryItem;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+
 import util.LibraryException;
 
 public class SeriesCheckedOutState implements ILibraryItemState {
@@ -29,19 +31,23 @@ public class SeriesCheckedOutState implements ILibraryItemState {
   }
 
   @Override
-  public void checkOut(Borrower borrower, int loanPeriodDays) {
+  public void checkOut(Borrower borrower, double loanPeriodDays) {
     throw new LibraryException("Series is already checked out");
   }
 
   @Override
   public void returnItem() {
-    // First return all items in the series
+    // Return all items in the series
     series.getItems().forEach(item -> item.getState().returnItem());
 
     // Then transition to available state
     SeriesAvailableState newState = new SeriesAvailableState();
     newState.setContext(series);
     series.setState(newState);
+
+    borrower.update(String.format(
+        "You have returned '%s'. Thank you!",
+        series.getTitle()));
   }
 
   @Override
@@ -64,5 +70,25 @@ public class SeriesCheckedOutState implements ILibraryItemState {
   @Override
   public LocalDate getDueDate() {
     return dueDate;
+  }
+
+  @Override
+  public void checkDueDate() {
+    LocalDate today = LocalDate.now();
+    if (dueDate != null) {
+      long daysUntilDue = ChronoUnit.DAYS.between(today, dueDate);
+
+      if (daysUntilDue == 2) {
+        borrower.update(String.format(
+            "REMINDER: Book series '%s' is due in 2 days (Due: %s)",
+            series.getTitle(),
+            dueDate.format(DateTimeFormatter.ISO_LOCAL_DATE)));
+      } else if (daysUntilDue <= 0) {
+        borrower.update(String.format(
+            "OVERDUE: Book series '%s' was due on %s. Please return it as soon as possible.",
+            series.getTitle(),
+            dueDate.format(DateTimeFormatter.ISO_LOCAL_DATE)));
+      }
+    }
   }
 }

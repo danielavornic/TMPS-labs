@@ -7,7 +7,7 @@ import java.time.LocalDate;
 public interface ILibraryItemState {
   void setContext(ILibraryItem item);
 
-  void checkOut(Borrower borrower, int loanPeriodDays);
+  void checkOut(Borrower borrower, double loanPeriodDays);
 
   void returnItem();
 
@@ -18,4 +18,6 @@ public interface ILibraryItemState {
   Borrower getBorrower();
 
   LocalDate getDueDate();
+
+  void checkDueDate();
 }

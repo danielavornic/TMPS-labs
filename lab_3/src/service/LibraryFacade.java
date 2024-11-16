@@ -91,7 +91,7 @@ public class LibraryFacade implements ILibraryFacade {
   }
 
   @Override
-  public ILibraryItem checkoutItem(String itemId, String borrowerId, int days) {
+  public ILibraryItem checkoutItem(String itemId, String borrowerId, double days) {
     Borrower borrower = borrowerService.findBorrowerById(borrowerId);
     if (borrower == null) {
       throw new LibraryException("Borrower not found");
@@ -135,5 +135,20 @@ public class LibraryFacade implements ILibraryFacade {
       state.returnItem();
       return series;
     }
+  }
+
+  @Override
+  public List<String> getBorrowerNotifications(String borrowerId) {
+    return borrowerService.getBorrowerNotifications(borrowerId);
+  }
+
+  @Override
+  public void clearBorrowerNotifications(String borrowerId) {
+    borrowerService.clearBorrowerNotifications(borrowerId);
+  }
+
+  @Override
+  public void checkAllDueDates() {
+    bookService.checkAllDueDates();
   }
 }

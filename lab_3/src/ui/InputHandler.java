@@ -34,6 +34,20 @@ public class InputHandler {
     }
   }
 
+  public static double readDouble(String prompt, double min, double max) {
+    System.out.print(prompt);
+    try {
+      double value = Double.parseDouble(scanner.nextLine().trim());
+      if (value < min || value > max) {
+        throw new LibraryException(
+            String.format("Value must be between %.2f and %.2f", min, max));
+      }
+      return value;
+    } catch (NumberFormatException e) {
+      throw new LibraryException("Please enter a valid number");
+    }
+  }
+
   public static String readIsbn(String prompt) {
     System.out.print(prompt);
     String isbn = scanner.nextLine().trim();

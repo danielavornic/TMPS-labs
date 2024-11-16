@@ -53,7 +53,7 @@ public class BookService implements IBookService {
     return book;
   }
 
-  public Book checkoutBook(String isbn, String borrowerId, int loanPeriodDays) {
+  public Book checkoutBook(String isbn, String borrowerId, double loanPeriodDays) {
     Book book = database.findBookByIsbn(isbn);
     if (book == null) {
       throw new LibraryException("Book not found");
@@ -138,5 +138,12 @@ public class BookService implements IBookService {
     newBook.setYear(year);
     database.addBook(newBook);
     return newBook;
+  }
+
+  public void checkAllDueDates() {
+    List<Book> books = database.getAllBooks();
+    books.stream()
+        .filter(book -> !book.getState().isAvailable())
+        .forEach(book -> book.getState().checkDueDate());
   }
 }
